@@ -1,4 +1,4 @@
-## How to use（demo.js）
+## 使用方法（demo.js）
 ```
 //导入wxml和标准json互转的库
 var wxml2json = require("./wxml2json").wxml2json;
