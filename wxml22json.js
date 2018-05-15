@@ -1,6 +1,6 @@
-var nanoid = require('nanoid');
+
 // 输入组件id和新格式的json，从父组件children移除组件id
-module.exports.remove = function remove(id, json){
+function remove(id, json){
     // let children_id = json["info"][id].children;
     let father_id = json["info"][id].fatherID;
     findParent_json_and_remove(id, father_id, json["info"]);
@@ -16,7 +16,7 @@ function findParent_json_and_remove(id, father_id, info){
 }
 
 //输入组件id以及它的父组件id，将组件id插入到父组件children
-module.exports.insert = function insert(id, father_id, json){
+function insert(id, father_id, json){
     // let children_id = json["info"][id].children;
     json["info"][id].fatherID = father_id;
     findParent_json_and_insert(id,father_id,json["info"]);
@@ -31,7 +31,7 @@ function findParent_json_and_insert(id,father_id, info){
 }
 
 //输入原始标准json，输出新格式json
-module.exports.generate_json = function generate_json(origin_json){
+function generate_json(origin_json){
   var id_json = {};
   var root_id = 'root';
   for(var i=0; i<origin_json.children.length; i++) 
@@ -90,7 +90,7 @@ function identify_json(id_json, father_id, child_id, data){
 }
 
 //输入新格式json，输出标准格式json
-module.exports.recover_json = function recover_json(new_json){
+function recover_json(new_json){
     let origin_json = {};
     origin_json["type"] = 'root';
     origin_json["children"] = new Array();
@@ -130,3 +130,32 @@ function findChild_json_and_insert(new_json, id, child_maps){
     }
     return temp;
 }
+
+
+var wxml2json = require("wxml2json").wxml2json;
+var json2wxml = require('wxml2json').json2wxml;
+var nanoid = require('nanoid');
+
+module.exports.wxml2json = function(wxml){
+    let origin_json = wxml2json(wxml);
+    let new_json = generate_json(origin_json);
+    return new_json;
+}
+
+module.exports.json2wxml = function(json){
+    let rec_json = recover_json(json);
+    let rec_wxml = json2wxml(rec_json);
+    return rec_wxml;
+}
+
+module.exports.move = function(f_id, t_id, json){
+    remove(f_id, json);
+    insert(f_id, t_id, json);
+    let rec_json = recover_json(json);
+    let rec_wxml = json2wxml(rec_json);
+    let t = new Array();
+    t.push(json);
+    t.push(rec_wxml);
+    return t;
+}
+
