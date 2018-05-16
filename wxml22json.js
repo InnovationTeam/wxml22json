@@ -82,7 +82,7 @@ function identify_json(id_json, father_id, child_id, data){
     for(var i=0; i<data.children.length; i++) 
     {   
         let t =  identify_json(id_json, temp["id"], temp["children"][i], data.children[i]);
-        id_json["children"] = id_json["children"].concat(t["id"]);
+        // id_json["children"] = id_json["children"].concat(t["id"]);
         id_json["info"][t["id"]] = t; 
     }  
  }
